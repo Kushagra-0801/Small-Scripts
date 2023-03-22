@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -eu
+
+get_num_ssh_conns() {
+  ss | grep -c ssh
+}
+
+if [ "$(get_num_ssh_conns)" -eq 0 ]
+then
+  echo "Shutting down at $(date)" >> /home/ubuntu/shutdown-log
+  sudo shutdown
+fi
