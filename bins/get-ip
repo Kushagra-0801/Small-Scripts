@@ -1,0 +1,22 @@
+#!/bin/bash
+
+set -eu
+
+if [ $# -eq 0 ]
+  then
+  echo "Usage: get-ip PREFIX"
+  echo "  Example: get-ip 10.0"
+  echo "  Example: get-ip 127"
+  exit 1
+fi
+
+ip_prefix="$1"
+
+ip_address=$(ip addr | grep "inet $ip_prefix" | xargs -L 1 echo | cut -d " " -f 2 | cut -d "/" -f 1)
+
+if [ -z "$ip_address" ]
+  then
+  exit 1
+else
+  echo "$ip_address"
+fi
