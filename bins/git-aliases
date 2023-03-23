@@ -1,0 +1,28 @@
+#!/bin/bash
+
+set -eu
+
+aliases=$(git config --list \
+  | grep -E '^alias\.' \
+  | sed 's/^alias\.//')
+
+# check if stdout is a terminal
+if [ -t 1 ]
+  then
+  column \
+    --table \
+    --separator '=' \
+    --output-separator ' | ' \
+    --table-columns 'alias,command' \
+    --table-wrap 'command' \
+    --table-columns-limit 2 \
+  <<< "$aliases"
+else
+  column \
+    --table \
+    --separator '=' \
+    --output-separator ' | ' \
+    --table-columns 'alias,command' \
+    --table-columns-limit 2 \
+  <<< "$aliases"
+fi
