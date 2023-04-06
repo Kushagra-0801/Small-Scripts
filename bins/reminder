@@ -1,0 +1,65 @@
+#!/bin/bash
+
+set -eu
+
+case "$1" in
+  "eye")
+    notify-send \
+        --hint int:transient:1 \
+        --icon "eye-open-negative-filled-symbolic" \
+        "20-20-20 Rule" "Look away for 20 seconds"
+    sleep 20
+    today="$(date +%a)"
+    if [ "$today" == "Tue" ] || [ "$today" == "Wed" ]
+    then
+        notify-send \
+            --hint int:transient:1 \
+            --icon "eye-open-negative-filled-symbolic" \
+            "20-20-20 Rule" "Come back to work now"
+    else
+        notify-send \
+            --hint int:transient:1 \
+            --icon "eye-open-negative-filled-symbolic" \
+            "20-20-20 Rule" "Come back to work now"
+        # spd-say "Back to work now"
+    fi
+    ;;
+  "water")
+    notify-send \
+        --hint int:transient:1 \
+        --icon "applications-health-symbolic" \
+        "Drink Water" "Take a gulp of tasty tasty water"
+    ;;
+  "joke")
+    jokeRes="$(curl --silent 'https://v2.jokeapi.dev/joke/Programming,Dark,Pun,Spooky')"
+    errored="$(jq '.error' <<< "$jokeRes")"
+    if [ "$errored" == "false" ]
+    then
+        jokeType="$(jq '.type' <<< "$jokeRes")"
+        if [ "$jokeType" == "\"twopart\"" ]
+        then
+            setup="$(jq '.setup' <<< "$jokeRes")"
+            delivery="$(jq '.delivery' <<< "$jokeRes")"
+            notify-send \
+                --hint int:transient:1 \
+                --icon "face-laugh-symbolic" \
+                "Wait for it" "$setup"
+            sleep 3
+            notify-send \
+                --hint int:transient:1 \
+                --icon "face-laugh-symbolic" \
+                "HAHAHA" "$delivery"
+        else
+            joke="$(jq '.joke' <<< "$jokeRes")"
+            notify-send \
+                --hint int:transient:1 \
+                --icon "face-laugh-symbolic" \
+                "HAHAHA" "$joke"
+        fi
+    fi
+    ;;
+  *)
+    echo "Not a good reminder"
+    exit 1
+    ;;
+esac
